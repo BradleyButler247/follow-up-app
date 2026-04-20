@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Outreach System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="auth-gate" class="auth-gate is-hidden">
+    <form id="auth-form" class="auth-card">
+      <p class="eyebrow">Partner Access</p>
+      <h2>Enter the shared access code</h2>
+      <p id="auth-message" class="supporting-text">Use the code you were given to open the workspace.</p>
+      <label>
+        Access code
+        <input id="access-code-input" type="password" autocomplete="one-time-code" required>
+      </label>
+      <div class="form-actions">
+        <button id="access-code-submit" class="primary-button" type="submit">Unlock workspace</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Seller Outreach System</p>
+        <h1>Run seller outreach from one local command center.</h1>
+        <p class="hero-text">
+          Add sellers, generate personalized outreach, approve or suppress by channel, and send by
+          text, email, or direct mail using Gmail, Google Voice workflow, and printable mail.
+        </p>
+      </div>
+      <aside class="hero-panel">
+        <div class="hero-panel-head">
+          <p class="panel-label">This build now includes</p>
+          <button id="logout-button" class="ghost-button ghost-button-light" type="button">Lock</button>
+        </div>
+        <ul class="hero-list">
+          <li>Persistent backend storage</li>
+          <li>Manual approval gate and auto-send option</li>
+          <li>Suppression controls per lead and channel</li>
+          <li>Gmail SMTP, Google Voice workflow, and mail export</li>
+        </ul>
+        <div id="flash-message" class="flash-message">Start the server with <code>ruby server.rb</code>, then open <code>http://localhost:4567</code>. Add a Gmail app password in <code>.env</code> when you are ready for live email.</div>
+      </aside>
+    </header>
+
+    <section class="stats-grid" aria-label="Overview">
+      <article class="stat-card">
+        <p class="stat-label">Total sellers</p>
+        <p id="stat-total-leads" class="stat-value">0</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">Pending</p>
+        <p id="stat-pending" class="stat-value">0</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">Approved</p>
+        <p id="stat-approved" class="stat-value">0</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">Completed</p>
+        <p id="stat-completed" class="stat-value">0</p>
+      </article>
+    </section>
+
+    <main class="workspace-grid">
+      <section class="stack-column">
+        <article class="panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Intake</p>
+              <h2>Add or edit a seller</h2>
+            </div>
+            <button id="seed-demo-button" class="ghost-button" type="button">Load example</button>
+          </div>
+
+          <form id="lead-form" class="seller-form">
+            <input id="lead-id" name="id" type="hidden">
+
+            <label>
+              Owner first name
+              <input id="first-name" name="firstName" type="text" required>
+            </label>
+
+            <label>
+              Owner last name
+              <input id="last-name" name="lastName" type="text" required>
+            </label>
+
+            <label class="full-span">
+              Property address
+              <input id="property-address" name="propertyAddress" type="text" required placeholder="123 Main St, Denver, CO 80205">
+            </label>
+
+            <label class="full-span">
+              Mailing address
+              <input id="mailing-address" name="mailingAddress" type="text" placeholder="Defaults to the property address">
+            </label>
+
+            <label>
+              Mobile phone
+              <input id="phone" name="phone" type="text" placeholder="Optional for text outreach">
+            </label>
+
+            <label>
+              Email
+              <input id="email" name="email" type="email" placeholder="Optional for email outreach">
+            </label>
+
+            <label>
+              Sequence start date
+              <input id="sequence-start-date" name="sequenceStartDate" type="date">
+            </label>
+
+            <label>
+              Status
+              <select id="status" name="status">
+                <option value="active">Active</option>
+                <option value="paused">Paused</option>
+                <option value="do-not-contact">Do not contact</option>
+              </select>
+            </label>
+
+            <label class="full-span">
+              Notes
+              <textarea id="notes" name="notes" rows="4" placeholder="Anything useful about the seller or property"></textarea>
+            </label>
+
+            <div class="form-actions full-span">
+              <button class="primary-button" type="submit">Save seller</button>
+              <button id="reset-form-button" class="ghost-button" type="button">New seller</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Bulk Import</p>
+              <h2>Paste sellers from a CSV</h2>
+            </div>
+          </div>
+
+          <p class="supporting-text">
+            Required headers: <code>firstName</code>, <code>lastName</code>, <code>propertyAddress</code>.
+            Optional: <code>mailingAddress</code>, <code>phone</code>, <code>email</code>, <code>notes</code>,
+            <code>status</code>, <code>sequenceStartDate</code>. Put quotes around any field that contains commas.
+          </p>
+
+          <textarea id="bulk-import-input" class="bulk-textarea" rows="8" placeholder="firstName,lastName,propertyAddress,mailingAddress,phone,email,notes&#10;Sarah,Nguyen,&quot;123 Oak St, Denver, CO 80205&quot;,&quot;123 Oak St, Denver, CO 80205&quot;,3035550101,sarah@example.com,Inherited property"></textarea>
+
+          <div class="form-actions">
+            <button id="bulk-import-button" class="primary-button" type="button">Import sellers</button>
+          </div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Templates</p>
+              <h2>Personalize your outreach copy</h2>
+            </div>
+          </div>
+
+          <p class="supporting-text">
+            Available placeholders: <code>{{firstName}}</code>, <code>{{lastName}}</code>, <code>{{fullName}}</code>,
+            <code>{{propertyAddress}}</code>, <code>{{mailingAddress}}</code>, <code>{{today}}</code>,
+            <code>{{companyName}}</code>, <code>{{companyPhone}}</code>, <code>{{companyEmail}}</code>.
+          </p>
+
+          <label class="template-block">
+            Text template
+            <textarea id="text-template" rows="5"></textarea>
+          </label>
+
+          <label class="template-block">
+            Email subject
+            <input id="email-subject-template" type="text">
+          </label>
+
+          <label class="template-block">
+            Email body
+            <textarea id="email-body-template" rows="7"></textarea>
+          </label>
+
+          <label class="template-block">
+            Direct-mail letter
+            <textarea id="letter-template" rows="10"></textarea>
+          </label>
+
+          <div class="form-actions">
+            <button id="save-templates-button" class="primary-button" type="button">Save templates</button>
+          </div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Cadence</p>
+              <h2>Shape the follow-up sequence</h2>
+            </div>
+            <button id="add-sequence-step-button" class="ghost-button" type="button">Add step</button>
+          </div>
+
+          <div id="sequence-editor" class="sequence-editor"></div>
+
+          <div class="form-actions">
+            <button id="save-sequence-button" class="primary-button" type="button">Save cadence</button>
+          </div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Delivery Engine</p>
+              <h2>Provider and send settings</h2>
+            </div>
+            <button id="process-due-button" class="ghost-button" type="button">Run due sends</button>
+          </div>
+
+          <form id="system-settings-form" class="seller-form">
+            <label>
+              Company name
+              <input id="company-name" type="text">
+            </label>
+
+            <label>
+              Company phone
+              <input id="company-phone" type="text">
+            </label>
+
+            <label>
+              Company email
+              <input id="company-email" type="email">
+            </label>
+
+            <label>
+              Google Voice number
+              <input id="sms-from-number" type="text" placeholder="+13035550101">
+            </label>
+
+            <label>
+              Gmail address
+              <input id="email-from-address" type="text" placeholder="offers@yourdomain.com">
+            </label>
+
+            <label>
+              Email reply-to
+              <input id="email-reply-to" type="email">
+            </label>
+
+            <label class="full-span">
+              Mail return address
+              <input id="mail-return-address" type="text" placeholder="123 Main St, Denver, CO 80205">
+            </label>
+
+            <label>
+              CRM name
+              <input id="crm-name" type="text" placeholder="Podio, Follow Up Boss, REsimpli, etc.">
+            </label>
+
+            <label>
+              CRM webhook URL
+              <input id="crm-webhook-url" type="url" placeholder="Paste Zapier, Make, or CRM webhook URL">
+            </label>
+
+            <label class="full-span">
+              CRM webhook token
+              <input id="crm-webhook-token" type="password" placeholder="Optional shared secret or API token">
+            </label>
+
+            <label>
+              Text workflow
+              <select id="text-provider">
+                <option value="manual_google_voice">Manual Google Voice</option>
+                <option value="twilio">Twilio SMS</option>
+              </select>
+            </label>
+
+            <label>
+              Email workflow
+              <select id="email-provider">
+                <option value="manual_gmail">Manual Gmail</option>
+                <option value="gmail_smtp">Gmail SMTP</option>
+                <option value="resend">Resend</option>
+              </select>
+            </label>
+
+            <label>
+              Mail workflow
+              <select id="mail-provider">
+                <option value="manual_print">Manual print and mail</option>
+                <option value="lob">Lob</option>
+              </select>
+            </label>
+
+            <label>
+              Delivery mode
+              <select id="delivery-mode">
+                <option value="dry_run">Dry run</option>
+                <option value="live">Live</option>
+              </select>
+            </label>
+
+            <label>
+              Auto send
+              <select id="auto-send-enabled">
+                <option value="false">Off</option>
+                <option value="true">On</option>
+              </select>
+            </label>
+
+            <label>
+              Approval gate
+              <select id="require-manual-approval">
+                <option value="true">Required</option>
+                <option value="false">Not required</option>
+              </select>
+            </label>
+
+            <label>
+              Processor interval
+              <input id="poll-interval-seconds" type="number" min="15" step="15">
+            </label>
+
+            <div class="full-span provider-shell">
+              <div class="provider-shell-head">
+                <p class="section-kicker">Providers</p>
+                <p id="runtime-status" class="supporting-text"></p>
+              </div>
+              <div id="provider-status-list" class="provider-status-list"></div>
+            </div>
+
+            <div class="form-actions full-span">
+              <button id="save-system-settings-button" class="primary-button" type="submit">Save delivery settings</button>
+              <button id="export-crm-button" class="ghost-button" type="button">Export CRM CSV</button>
+              <button id="sync-crm-button" class="ghost-button" type="button">Sync CRM webhook</button>
+            </div>
+          </form>
+        </article>
+      </section>
+
+      <section class="stack-column">
+        <article class="panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Roster</p>
+              <h2>Your seller list</h2>
+            </div>
+          </div>
+
+          <div id="lead-list" class="lead-list"></div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Preview</p>
+              <h2>Selected seller outreach</h2>
+            </div>
+          </div>
+
+          <div id="lead-preview" class="lead-preview"></div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Queue</p>
+              <h2>Ready-to-work campaign tasks</h2>
+            </div>
+          </div>
+
+          <div class="export-bar">
+            <button id="export-text-button" class="ghost-button" type="button">Export text CSV</button>
+            <button id="export-email-button" class="ghost-button" type="button">Export email CSV</button>
+            <button id="export-mail-button" class="ghost-button" type="button">Export mail CSV</button>
+            <button id="export-json-button" class="primary-button" type="button">Export backup JSON</button>
+          </div>
+
+          <div class="queue-table-shell">
+            <table class="queue-table">
+              <thead>
+                <tr>
+                  <th>Due</th>
+                  <th>Seller</th>
+                  <th>Channel</th>
+                  <th>Step</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="queue-table-body"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Activity</p>
+              <h2>Recent delivery activity</h2>
+            </div>
+          </div>
+
+          <div id="activity-log" class="activity-log"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

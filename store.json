@@ -1,0 +1,145 @@
+{
+  "templates": {
+    "text": "Hi {{firstName}}, this is {{companyName}} reaching out about {{propertyAddress}}. If you've considered selling, we would love to make you a fair cash offer and keep the process simple. Reply here if you'd be open to a quick conversation. Reply STOP to opt out.",
+    "emailSubject": "Quick question about {{propertyAddress}}",
+    "emailBody": "Hi {{firstName}},\n\nI wanted to reach out about {{propertyAddress}}. {{companyName}} buys houses directly and we try to make the process simple, flexible, and fast.\n\nIf selling is something you would consider, reply here and I can share a few options.\n\nThanks,\n{{companyName}}\n{{companyPhone}}\n{{companyEmail}}",
+    "letter": "{{today}}\n\n{{fullName}}\n{{mailingAddress}}\n\nHi {{firstName}},\n\nI wanted to personally reach out about {{propertyAddress}}. {{companyName}} buys houses directly from homeowners and we aim to make the sale simple and straightforward.\n\nIf you would consider an offer on the property, I would be glad to connect and learn more about your timeline.\n\nSincerely,\n{{companyName}}\n{{companyPhone}}\n{{companyEmail}}"
+  },
+  "sequence": [
+    {
+      "id": "step-mail-0",
+      "label": "Intro letter",
+      "channel": "mail",
+      "dayOffset": 0
+    },
+    {
+      "id": "step-email-2",
+      "label": "Intro email",
+      "channel": "email",
+      "dayOffset": 2
+    },
+    {
+      "id": "step-text-5",
+      "label": "Initial text",
+      "channel": "text",
+      "dayOffset": 5
+    },
+    {
+      "id": "step-mail-14",
+      "label": "Follow-up letter",
+      "channel": "mail",
+      "dayOffset": 14
+    },
+    {
+      "id": "step-text-21",
+      "label": "Final text follow-up",
+      "channel": "text",
+      "dayOffset": 21
+    }
+  ],
+  "settings": {
+    "system": {
+      "companyName": "Close Circle Investments",
+      "companyPhone": "(970) 833-1256",
+      "companyEmail": "wilson@closecircleinvest.com",
+      "smsFromNumber": "(970) 833-1256",
+      "emailFromAddress": "wilson@closecircleinvest.com",
+      "emailReplyTo": "wilson@closecircleinvest.com",
+      "mailReturnAddress": "3006 Zuni St, Denver, CO 80211",
+      "textProvider": "manual_google_voice",
+      "emailProvider": "manual_gmail",
+      "mailProvider": "manual_print",
+      "deliveryMode": "dry_run",
+      "autoSendEnabled": false,
+      "requireManualApproval": true,
+      "pollIntervalSeconds": 60
+    }
+  },
+  "leads": [
+    {
+      "id": "lead-fredrick-narragon",
+      "firstName": "Fredrick",
+      "lastName": "Narragon",
+      "propertyAddress": "607 Yellowstone Road, Colorado Springs, CO 80910",
+      "mailingAddress": "607 Yellowstone Road, Colorado Springs, CO 80910",
+      "phone": "",
+      "email": "",
+      "sequenceStartDate": "2026-04-01",
+      "status": "active",
+      "notes": "Seeded from intake details.",
+      "channelPreferences": {
+        "text": true,
+        "email": true,
+        "mail": true
+      },
+      "suppressions": {
+        "text": false,
+        "email": false,
+        "mail": false
+      },
+      "outreach": {
+      },
+      "createdAt": "2026-04-01T18:45:18Z",
+      "updatedAt": "2026-04-01T18:45:18Z"
+    },
+    {
+      "id": "lead-robert-beltz",
+      "firstName": "Robert",
+      "lastName": "Beltz",
+      "propertyAddress": "5765 S Crocker St, Littleton",
+      "mailingAddress": "5765 S Crocker St, Littleton",
+      "phone": "3032209885",
+      "email": "robertbeltz@me.com",
+      "sequenceStartDate": "2026-04-01",
+      "status": "active",
+      "notes": "City/state/zip may need to be completed before formal mailing.",
+      "channelPreferences": {
+        "text": true,
+        "email": true,
+        "mail": true
+      },
+      "suppressions": {
+        "text": false,
+        "email": false,
+        "mail": false
+      },
+      "outreach": {
+      },
+      "createdAt": "2026-04-01T18:45:18Z",
+      "updatedAt": "2026-04-01T18:45:18Z"
+    },
+    {
+      "id": "lead-sylvia-troy",
+      "firstName": "Sylvia",
+      "lastName": "Troy",
+      "propertyAddress": "805 Holiday Cir, Denver",
+      "mailingAddress": "805 Holiday Cir, Denver",
+      "phone": "3039901436",
+      "email": "sylviatroy69@gmail.com",
+      "sequenceStartDate": "2026-04-01",
+      "status": "active",
+      "notes": "City/state/zip may need to be completed before formal mailing.",
+      "channelPreferences": {
+        "text": true,
+        "email": true,
+        "mail": true
+      },
+      "suppressions": {
+        "text": false,
+        "email": false,
+        "mail": false
+      },
+      "outreach": {
+      },
+      "createdAt": "2026-04-01T18:45:18Z",
+      "updatedAt": "2026-04-01T18:45:18Z"
+    }
+  ],
+  "activityLog": [
+
+  ],
+  "runtime": {
+    "lastProcessorRunAt": null,
+    "lastProcessorSummary": null
+  }
+}
