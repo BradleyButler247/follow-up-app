@@ -1,6 +1,13 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    csv (3.3.5)
+    net-protocol (0.2.2)
+      timeout
+    net-smtp (0.5.1)
+      net-protocol
+    ostruct (0.6.3)
+    timeout (0.6.1)
     webrick (1.8.2)
 
 PLATFORMS
@@ -8,6 +15,9 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  csv (~> 3.3)
+  net-smtp (~> 0.5)
+  ostruct (~> 0.6)
   webrick (~> 1.8)
 
 RUBY VERSION
